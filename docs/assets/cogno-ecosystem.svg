@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 880" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <style>
+    :root {
+      --bg: transparent;
+      --ink: #1f2937; --ink2: #4b5563; --faint: #9ca3af;
+      --edge-f: #ccfbf1; --edge-s: #0d9488; --edge-t: #134e4a;
+      --mind-f: #ede9fe; --mind-s: #7c3aed; --mind-t: #4c1d95;
+      --mem-f:  #dcfce7; --mem-s:  #16a34a; --mem-t:  #14532d;
+      --mod-f:  #dbeafe; --mod-s:  #2563eb; --mod-t:  #1e3a8a;
+      --tool-f: #fef3c7; --tool-s: #d97706; --tool-t: #78350f;
+      --util-f: #f3f4f6; --util-s: #6b7280; --util-t: #374151;
+      --priv-s: #9ca3af; --priv-f: #fafafa; --priv-t: #6b7280;
+      --user-f: #ffffff; --user-s: #6b7280;
+      --arrow: #6b7280;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #e5e7eb; --ink2: #9ca3af; --faint: #6b7280;
+        --edge-f: #042f2e; --edge-s: #2dd4bf; --edge-t: #99f6e4;
+        --mind-f: #2e1065; --mind-s: #a78bfa; --mind-t: #ddd6fe;
+        --mem-f:  #052e16; --mem-s:  #4ade80; --mem-t:  #bbf7d0;
+        --mod-f:  #172554; --mod-s:  #60a5fa; --mod-t:  #bfdbfe;
+        --tool-f: #451a03; --tool-s: #fbbf24; --tool-t: #fde68a;
+        --util-f: #1f2937; --util-s: #9ca3af; --util-t: #d1d5db;
+        --priv-s: #6b7280; --priv-f: #11182710; --priv-t: #9ca3af;
+        --user-f: #111827; --user-s: #9ca3af;
+        --arrow: #9ca3af;
+      }
+    }
+    .t1 { font-size: 15px; font-weight: 700; }
+    .t2 { font-size: 11px; }
+    .t3 { font-size: 10.5px; }
+    .lbl { font-size: 10.5px; fill: var(--ink2); }
+    .caption { font-size: 12px; fill: var(--faint); }
+    line, path.arr { stroke: var(--arrow); stroke-width: 1.4; fill: none; }
+    path.dash { stroke-dasharray: 4 3; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 1 L 9 5 L 0 9 z" fill="var(--arrow)"/>
+    </marker>
+  </defs>
+
+  <!-- title -->
+  <text x="28" y="34" class="t1" font-size="19" fill="var(--ink)">The Cogno ecosystem</text>
+  <text x="28" y="54" class="caption">open-source organs · one private body that assembles them</text>
+
+  <!-- user -->
+  <rect x="430" y="14" width="380" height="52" rx="26" fill="var(--user-f)" stroke="var(--user-s)"/>
+  <text x="620" y="36" text-anchor="middle" class="t1" fill="var(--ink)">User</text>
+  <text x="620" y="54" text-anchor="middle" class="t2" fill="var(--ink2)">Telegram · WhatsApp · Web · voice notes</text>
+
+  <!-- user -> edges -->
+  <path class="arr" d="M 540 66 L 540 108 L 210 108 L 210 176" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text x="300" y="102" class="lbl">messages ⇆ replies</text>
+  <path class="arr" d="M 700 66 L 700 108 L 520 108 L 520 176" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text x="590" y="102" class="lbl">audio ⇆ voice</text>
+
+  <!-- ═══ host frame ═══ -->
+  <rect x="24" y="120" width="1032" height="700" rx="14" fill="var(--priv-f)" stroke="var(--priv-s)" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <text x="44" y="147" class="t1" font-size="16" fill="var(--priv-t)">cogno-host — the assembler</text>
+  <text x="44" y="164" class="t2" fill="var(--priv-t)">identity · RBAC · tenants · persistence wiring · every “core signals, host decides” decision</text>
+  <rect x="596" y="130" width="176" height="26" rx="13" fill="none" stroke="var(--priv-s)" stroke-dasharray="3 2"/>
+  <text x="684" y="147" text-anchor="middle" class="t3" fill="var(--priv-t)">private · product layer</text>
+
+  <!-- cogno-ui -->
+  <rect x="800" y="128" width="238" height="46" rx="8" fill="var(--priv-f)" stroke="var(--priv-s)" stroke-dasharray="5 4"/>
+  <text x="919" y="147" text-anchor="middle" class="t1" font-size="13" fill="var(--priv-t)">cogno-ui</text>
+  <text x="919" y="163" text-anchor="middle" class="t3" fill="var(--priv-t)">dashboard · billing · admin (private)</text>
+
+  <!-- ── left column: edges ── -->
+  <rect x="60" y="180" width="300" height="58" rx="8" fill="var(--edge-f)" stroke="var(--edge-s)"/>
+  <text x="72" y="202" class="t1" fill="var(--edge-t)">cogno-gateway</text>
+  <text x="72" y="222" class="t2" fill="var(--edge-t)">messaging edge — channels ⇆ normalized messages</text>
+
+  <rect x="390" y="180" width="270" height="58" rx="8" fill="var(--edge-f)" stroke="var(--edge-s)"/>
+  <text x="402" y="202" class="t1" fill="var(--edge-t)">cogno-vox</text>
+  <text x="402" y="222" class="t2" fill="var(--edge-t)">audio edge — STT in · TTS out</text>
+
+  <!-- persona -->
+  <rect x="60" y="330" width="250" height="96" rx="8" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+  <text x="72" y="352" class="t1" fill="var(--mind-t)">cogno-persona</text>
+  <text x="72" y="372" class="t2" fill="var(--mind-t)">who the agent is — scope · system ·</text>
+  <text x="72" y="387" class="t2" fill="var(--mind-t)">limits · voice prompts + selector</text>
+  <text x="72" y="410" class="t3" fill="var(--mind-t)" opacity="0.75">declaration, not execution</text>
+
+  <!-- soma / anima -->
+  <rect x="350" y="290" width="420" height="180" rx="10" fill="var(--mind-f)" stroke="var(--mind-s)" stroke-width="1.6"/>
+  <text x="366" y="314" class="t1" fill="var(--mind-t)">cogno-soma — orchestrator</text>
+  <text x="366" y="331" class="t2" fill="var(--mind-t)">runs the turn · EGO ⇄ SUPEREGO correction loop · hooks</text>
+  <rect x="366" y="344" width="388" height="110" rx="8" fill="var(--user-f)" stroke="var(--mind-s)" stroke-dasharray="0"/>
+  <text x="382" y="366" class="t1" font-size="13.5" fill="var(--mind-t)">cogno-anima — the mind</text>
+  <text x="382" y="382" class="t3" fill="var(--mind-t)" opacity="0.8">the cognitive stages</text>
+  <!-- stage chips -->
+  <g class="t3" fill="var(--mind-t)" text-anchor="middle">
+    <rect x="382" y="392" width="72" height="24" rx="12" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="418" y="408">NOUMENO</text>
+    <rect x="462" y="392" width="44" height="24" rx="12" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="484" y="408">NER</text>
+    <rect x="514" y="392" width="36" height="24" rx="12" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="532" y="408">ID</text>
+    <rect x="558" y="392" width="46" height="24" rx="12" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="581" y="408">EGO</text>
+    <text x="614" y="408" font-size="12">⇄</text>
+    <rect x="624" y="392" width="76" height="24" rx="12" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="662" y="408">SUPEREGO</text>
+  </g>
+  <text x="382" y="440" class="t3" fill="var(--mind-t)" opacity="0.75">perceive → analyze → route → execute tools → judge + voice · drift woven through</text>
+
+  <!-- engram -->
+  <rect x="800" y="290" width="238" height="140" rx="8" fill="var(--mem-f)" stroke="var(--mem-s)"/>
+  <text x="812" y="312" class="t1" fill="var(--mem-t)">cogno-engram</text>
+  <text x="812" y="332" class="t2" fill="var(--mem-t)">memory — sessions · turns · long-term</text>
+  <text x="812" y="347" class="t2" fill="var(--mem-t)">memories · knowledge graph · buffer</text>
+  <text x="812" y="367" class="t2" fill="var(--mem-t)">hypnos: sleep-time consolidation</text>
+  <g class="t3" fill="var(--mem-t)" text-anchor="middle">
+    <rect x="812" y="384" width="76" height="24" rx="12" fill="var(--user-f)" stroke="var(--mem-s)"/>
+    <text x="850" y="400">Postgres</text>
+    <rect x="896" y="384" width="56" height="24" rx="12" fill="var(--user-f)" stroke="var(--mem-s)"/>
+    <text x="924" y="400">Redis</text>
+  </g>
+
+  <!-- edges -> soma -->
+  <path class="arr" d="M 210 238 L 210 262 L 450 262 L 450 288" marker-end="url(#a)"/>
+  <path class="arr" d="M 520 238 L 520 288" marker-end="url(#a)"/>
+  <text x="530" y="262" class="lbl">text (via STT)</text>
+
+  <!-- persona -> soma -->
+  <path class="arr" d="M 310 378 L 348 378" marker-end="url(#a)"/>
+  <text x="316" y="370" class="lbl">prompts</text>
+
+  <!-- soma <-> engram -->
+  <path class="arr" d="M 720 288 L 720 264 L 900 264 L 900 288" marker-end="url(#a)" marker-start="url(#a)"/>
+  <text x="810" y="257" class="lbl" text-anchor="middle">recall · persist</text>
+
+  <!-- composite dispatcher pill -->
+  <rect x="420" y="500" width="280" height="34" rx="17" fill="var(--tool-f)" stroke="var(--tool-s)"/>
+  <text x="560" y="521" text-anchor="middle" class="t2" font-weight="700" fill="var(--tool-t)">CompositeDispatcher — one tool contract</text>
+  <path class="arr" d="M 560 498 L 560 472" marker-end="url(#a)"/>
+  <text x="570" y="490" class="lbl">tools → EGO</text>
+
+  <!-- tools row -->
+  <rect x="350" y="560" width="200" height="74" rx="8" fill="var(--tool-f)" stroke="var(--tool-s)"/>
+  <text x="362" y="582" class="t1" fill="var(--tool-t)">cogno-cortex</text>
+  <text x="362" y="602" class="t2" fill="var(--tool-t)">in-process skills framework</text>
+  <text x="362" y="617" class="t3" fill="var(--tool-t)" opacity="0.8">SKILL.md + BaseTool → rank → run</text>
+
+  <rect x="570" y="560" width="170" height="74" rx="8" fill="var(--tool-f)" stroke="var(--tool-s)"/>
+  <text x="582" y="582" class="t1" fill="var(--tool-t)">cogno-mcp</text>
+  <text x="582" y="602" class="t2" fill="var(--tool-t)">MCP bridge — any MCP</text>
+  <text x="582" y="617" class="t2" fill="var(--tool-t)">server as ordinary tools</text>
+
+  <rect x="760" y="560" width="278" height="74" rx="8" fill="var(--tool-f)" stroke="var(--tool-s)"/>
+  <text x="772" y="582" class="t1" fill="var(--tool-t)">cogno-praxis</text>
+  <text x="772" y="602" class="t2" fill="var(--tool-t)">business verticals as MCP servers —</text>
+  <text x="772" y="617" class="t2" fill="var(--tool-t)">secretary/scheduler · bookkeeper · …</text>
+
+  <path class="arr" d="M 450 558 L 450 546 L 520 546 L 520 536" marker-end="url(#a)"/>
+  <path class="arr" d="M 655 558 L 655 546 L 600 546 L 600 536" marker-end="url(#a)"/>
+  <path class="arr" d="M 758 597 L 742 597" marker-end="url(#a)"/>
+
+  <!-- synapse -->
+  <rect x="60" y="560" width="250" height="120" rx="8" fill="var(--mod-f)" stroke="var(--mod-s)"/>
+  <text x="72" y="582" class="t1" fill="var(--mod-t)">cogno-synapse</text>
+  <text x="72" y="602" class="t2" fill="var(--mod-t)">model transport — LLM + embedding</text>
+  <text x="72" y="617" class="t2" fill="var(--mod-t)">backends behind one protocol</text>
+  <text x="72" y="640" class="t3" fill="var(--mod-t)" opacity="0.85">Ollama · OpenAI · Anthropic · Gemini ·</text>
+  <text x="72" y="655" class="t3" fill="var(--mod-t)" opacity="0.85">Groq · Bedrock · DeepSeek · …</text>
+
+  <!-- homeo -->
+  <rect x="60" y="710" width="250" height="72" rx="8" fill="var(--mod-f)" stroke="var(--mod-s)"/>
+  <text x="72" y="732" class="t1" fill="var(--mod-t)">cogno-homeo</text>
+  <text x="72" y="752" class="t2" fill="var(--mod-t)">resilience kernel — circuit breaker ·</text>
+  <text x="72" y="767" class="t2" fill="var(--mod-t)">retry · fallback · metrics seam</text>
+
+  <!-- soma -> synapse -->
+  <path class="arr" d="M 348 440 L 250 440 L 250 558" marker-end="url(#a)"/>
+  <text x="258" y="500" class="lbl">LLM + embeddings</text>
+  <!-- synapse -> homeo -->
+  <path class="arr" d="M 150 680 L 150 708" marker-end="url(#a)"/>
+  <text x="158" y="698" class="lbl">fallback runs over</text>
+  <!-- vox -> homeo (dashed) -->
+  <path class="arr dash" d="M 410 238 L 410 250 L 44 250 L 44 746 L 58 746" marker-end="url(#a)"/>
+
+  <!-- utilities strip -->
+  <text x="380" y="692" class="t3" fill="var(--util-t)" opacity="0.9">utilities the host composes</text>
+  <rect x="380" y="700" width="200" height="46" rx="8" fill="var(--util-f)" stroke="var(--util-s)"/>
+  <text x="392" y="719" class="t1" font-size="13" fill="var(--util-t)">cogno-meter</text>
+  <text x="392" y="736" class="t3" fill="var(--util-t)">usage metering → plan billing</text>
+  <rect x="596" y="700" width="200" height="46" rx="8" fill="var(--util-f)" stroke="var(--util-s)"/>
+  <text x="608" y="719" class="t1" font-size="13" fill="var(--util-t)">cogno-herald</text>
+  <text x="608" y="736" class="t3" fill="var(--util-t)">email · .ics invites · OTP</text>
+  <rect x="812" y="700" width="226" height="46" rx="8" fill="var(--util-f)" stroke="var(--util-s)"/>
+  <text x="824" y="719" class="t1" font-size="13" fill="var(--util-t)">cogno-aegis</text>
+  <text x="824" y="736" class="t3" fill="var(--util-t)">encryption at rest · HMAC · input guard</text>
+
+  <!-- cogno-observability (operator monitoring — watches the whole host) -->
+  <rect x="380" y="756" width="658" height="50" rx="8" fill="var(--util-f)" stroke="var(--util-s)"/>
+  <text x="392" y="777" class="t1" font-size="13" fill="var(--util-t)">cogno-observability</text>
+  <text x="392" y="795" class="t3" fill="var(--util-t)">SRE/Ops monitoring — per-turn metrics → Prometheus · logs → Loki · one Grafana (operator, not tenant)</text>
+
+  <!-- legend -->
+  <g class="t3">
+    <rect x="60" y="836" width="12" height="12" rx="3" fill="var(--mind-f)" stroke="var(--mind-s)"/>
+    <text x="78" y="846" fill="var(--ink2)">cognition</text>
+    <rect x="150" y="836" width="12" height="12" rx="3" fill="var(--mem-f)" stroke="var(--mem-s)"/>
+    <text x="168" y="846" fill="var(--ink2)">memory</text>
+    <rect x="232" y="836" width="12" height="12" rx="3" fill="var(--mod-f)" stroke="var(--mod-s)"/>
+    <text x="250" y="846" fill="var(--ink2)">models</text>
+    <rect x="312" y="836" width="12" height="12" rx="3" fill="var(--tool-f)" stroke="var(--tool-s)"/>
+    <text x="330" y="846" fill="var(--ink2)">tools</text>
+    <rect x="378" y="836" width="12" height="12" rx="3" fill="var(--edge-f)" stroke="var(--edge-s)"/>
+    <text x="396" y="846" fill="var(--ink2)">edges</text>
+    <rect x="444" y="836" width="12" height="12" rx="3" fill="var(--util-f)" stroke="var(--util-s)"/>
+    <text x="462" y="846" fill="var(--ink2)">utilities</text>
+    <rect x="530" y="836" width="12" height="12" rx="3" fill="none" stroke="var(--priv-s)" stroke-dasharray="3 2"/>
+    <text x="548" y="846" fill="var(--ink2)">private product layer</text>
+    <text x="1038" y="846" text-anchor="end" fill="var(--faint)">solid boxes: open source, Apache-2.0 — github.com/sudoers-ai</text>
+  </g>
+</svg>
