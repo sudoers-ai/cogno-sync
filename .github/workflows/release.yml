@@ -11,6 +11,18 @@ on:
   # publish.yml had that this did not. Pick the tag as the ref when dispatching.
   workflow_dispatch:
 
+# A group so two publishes never interleave — two runs racing to push the same tag is how a
+# registry ends up serving something nobody built.
+#
+# cancel-in-progress is FALSE here and must stay false. Killing a publish mid-flight is not a
+# saving: it is a half-written registry tag, a partially uploaded release, a git tag left
+# pointing at an artefact that was never finished — and the next run then trips over the wreck.
+# Publishes QUEUE; they never die. The cancelling variant of this block lives in ci.yml, where a
+# superseded run is worth nothing and dropping it costs nothing.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
