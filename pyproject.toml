@@ -1,6 +1,6 @@
 [project]
 name = "cogno-sync"
-version = "0.1.0"
+version = "0.1.1"
 description = "Distributed coordination primitives for the Cogno stack — async lock, token-bucket rate limiter, claim-once idempotency store and rolling daily cap, each with an in-process default and a Redis adapter"
 readme = "README.md"
 requires-python = ">=3.10"
