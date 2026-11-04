@@ -32,7 +32,8 @@ import asyncio
 import contextlib
 import logging
 import uuid
-from typing import Any, AsyncIterator, Awaitable, Callable, Protocol, runtime_checkable
+from typing import (Any, AsyncIterator, Awaitable, Callable, Optional, Protocol,
+                    runtime_checkable)
 
 from cogno_sync._redis import _RedisAdapter
 
@@ -98,13 +99,15 @@ class RedisLockProvider(_RedisAdapter):
     design: any Redis error or an acquisition timeout logs a WARNING and runs the body.
 
     ``renew=False`` turns the heartbeat off (the 0.1.0 behaviour). ``sleep`` is the clock the
-    acquisition retries and the heartbeat wait on — injectable so a test drives a fake one.
+    acquisition retries and the heartbeat wait on — injectable so a test drives a fake one. When
+    it is not given, ``asyncio.sleep`` is looked up at CALL time, as 0.1.0 did, so a caller that
+    patches this module's ``asyncio`` keeps driving the waits.
     """
 
     def __init__(self, client: Any = None, *, url: str = "",
                  key_prefix: str = "cogno:lock:", retry_interval: float = _RETRY_INTERVAL,
                  max_wait: float = _MAX_WAIT, renew: bool = True,
-                 sleep: "Callable[[float], Awaitable[Any]]" = asyncio.sleep) -> None:
+                 sleep: "Optional[Callable[[float], Awaitable[Any]]]" = None) -> None:
         super().__init__(client, url=url, key_prefix=key_prefix)
         self._retry = retry_interval
         self._max_wait = max_wait
@@ -124,7 +127,7 @@ class RedisLockProvider(_RedisAdapter):
                 if await r.set(lock_key, token, nx=True, ex=ttl):
                     acquired = True
                     break
-                await self._sleep(self._retry)
+                await self._wait(self._retry)
                 elapsed += self._retry
             if not acquired:
                 log.warning("event=lock_timeout key=%s waited=%.1fs proceeding_fail_open",
@@ -150,13 +153,16 @@ class RedisLockProvider(_RedisAdapter):
                 except Exception as exc:  # noqa: BLE001
                     log.warning("event=lock_release_failed key=%s error=%s", key, exc)
 
+    async def _wait(self, seconds: float) -> None:
+        await (self._sleep or asyncio.sleep)(seconds)
+
     async def _heartbeat(self, r: Any, lock_key: str, token: str, ttl: int, key: str) -> None:
         """Renew ``lock_key``'s TTL every ``ttl / 3`` while it holds ``token``. Ends when the key
         holds another token (``event=lock_lost``) or when cancelled; a Redis error is one missed
         beat (``event=lock_renew_failed``), never an exception the body sees."""
         interval = max(float(ttl) / _RENEW_FRACTION, _MIN_RENEW_INTERVAL)
         while True:
-            await self._sleep(interval)
+            await self._wait(interval)
             try:
                 kept = await r.eval(_LUA_RENEW, 1, lock_key, token, int(ttl))
             except Exception as exc:  # noqa: BLE001 — a missed beat, never the body's problem

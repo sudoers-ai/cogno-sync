@@ -263,3 +263,31 @@ async def test_a_short_body_is_never_renewed():
             await asyncio.sleep(0)
     await bounded(turn())
     assert redis.renews == []
+
+
+@pytest.mark.asyncio
+async def test_without_an_injected_sleep_the_modules_asyncio_is_read_at_call_time(monkeypatch):
+    """0.1.0's seam: a caller that patches ``cogno_sync.locks.asyncio`` drives the provider's
+    waits (the reference host's lock tests do). Broken world: ``sleep=asyncio.sleep`` bound at
+    definition time silently ignores the patch and the waits become REAL ones."""
+    import types
+
+    from cogno_sync import locks as locks_mod
+    seen: "list[float]" = []
+    real_sleep = asyncio.sleep
+
+    async def fake_sleep(delay, *a, **k):
+        seen.append(delay)
+        await real_sleep(0)
+
+    fake = types.ModuleType("asyncio")
+    fake.__dict__.update(asyncio.__dict__)
+    fake.sleep = fake_sleep  # type: ignore[attr-defined]
+    monkeypatch.setattr(locks_mod, "asyncio", fake)
+    clock = FakeClock()
+    redis = FakeRedis(clock)
+    redis.store["cogno:lock:s1"] = ("someone:else", 10**9)            # held: the provider retries
+    provider = RedisLockProvider(redis, max_wait=2.0, retry_interval=0.5)
+    async with provider.lock("s1", ttl=TTL):
+        pass                                                          # fail-open after max_wait
+    assert seen == [0.5, 0.5, 0.5, 0.5]
