@@ -22,6 +22,14 @@ from cogno_sync import RedisLockProvider
 
 TTL = 120
 
+#: A REAL-time bound on every await of a test's own tasks: a lock that never lets go, or a
+#: heartbeat that outlives its body, makes the test FAIL by timeout instead of hanging the run.
+BOUND_S = 5.0
+
+
+async def bounded(aw):
+    return await asyncio.wait_for(aw, timeout=BOUND_S)
+
 
 class FakeClock:
     """Time that moves only when :meth:`advance` is called; :meth:`sleep` waits for it."""
@@ -122,7 +130,7 @@ async def test_GEMEO_a_body_longer_than_the_ttl_keeps_the_lock_and_the_second_wa
 
     tasks = [asyncio.ensure_future(long_turn()), asyncio.ensure_future(next_message())]
     await clock.advance(400)
-    await asyncio.gather(*tasks)
+    await bounded(asyncio.gather(*tasks))
     names = [n for n, _ in trace]
     assert names == ["enter-1", "exit-1", "enter-2"], trace
     assert dict(trace)["enter-2"] >= dict(trace)["exit-1"]
@@ -150,7 +158,7 @@ async def test_CONTROL_without_renewal_the_second_enters_while_the_first_still_r
 
     tasks = [asyncio.ensure_future(long_turn()), asyncio.ensure_future(next_message())]
     await clock.advance(400)
-    await asyncio.gather(*tasks)
+    await bounded(asyncio.gather(*tasks))
     assert trace == ["enter-1", "enter-2", "exit-1"], trace
 
 
@@ -176,7 +184,7 @@ async def test_GEMEO_a_lock_another_owner_holds_is_never_renewed():
     await clock.advance(45)                        # past the first beat (40 s)
     assert redis.store[key] == ("other-owner:token", theirs["until"])   # NOT extended
     await clock.advance(200)
-    await task
+    await bounded(task)
     assert all(tok != "other-owner:token" for _k, tok in redis.renews)
     # their key was never extended, and our release did not delete it (it expired on its own)
     assert key not in redis.store or redis.store[key] == ("other-owner:token", theirs["until"])
@@ -200,7 +208,7 @@ async def test_GEMEO_cancel_stops_the_heartbeat_and_frees_the_lock():
     assert beats >= 2
     task.cancel()
     with pytest.raises(asyncio.CancelledError):
-        await task
+        await bounded(task)
     assert "cogno:lock:s1" not in redis.store      # released
     await clock.advance(200)
     assert len(redis.renews) == beats              # no beat after the cancel
@@ -223,7 +231,7 @@ async def test_GEMEO_redis_down_mid_body_never_hangs_or_breaks_the_body():
 
     task = asyncio.ensure_future(turn())
     await clock.advance(300)
-    await asyncio.wait_for(task, timeout=5)        # real seconds: the exit never hangs
+    await bounded(task)                            # real seconds: the exit never hangs
     assert done == [True]
 
 
@@ -238,7 +246,7 @@ async def test_the_heartbeat_ends_with_the_body_and_the_lock_is_released():
 
     task = asyncio.ensure_future(turn())
     await clock.advance(60)
-    await task
+    await bounded(task)
     beats = len(redis.renews)
     assert beats == 1 and "cogno:lock:s1" not in redis.store
     await clock.advance(300)
@@ -250,6 +258,8 @@ async def test_a_short_body_is_never_renewed():
     """Under ``ttl / 3`` the body is done before the first beat: renewal adds no round trip."""
     clock, redis, make = _world()
     provider = make()
-    async with provider.lock("s1", ttl=TTL):
-        await asyncio.sleep(0)
+    async def turn() -> None:
+        async with provider.lock("s1", ttl=TTL):
+            await asyncio.sleep(0)
+    await bounded(turn())
     assert redis.renews == []
