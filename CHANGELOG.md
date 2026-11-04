@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.1 — 2026-11-04
+
+- `locks.RedisLockProvider` RENEWS the TTL while the body runs. A heartbeat, every `ttl / 3`,
+  extends the key with an owner-only Lua compare-and-expire, so a body slower than the TTL keeps
+  its lock and the next acquirer waits instead of taking an expired key and running beside it
+  (measured on the reference host: a turn's p99 of 126 s against the 120 s default). The
+  heartbeat stops when the body ends or is cancelled (it is cancelled and awaited with a bound
+  before the release, so no beat can renew a key being freed), stops for good when the key holds
+  another owner's token (`event=lock_lost`), and treats a Redis error as one missed beat
+  (`event=lock_renew_failed`): the body never waits on it. `renew=False` keeps 0.1.0's behaviour;
+  `sleep=` makes the clock injectable. `lock()`'s signature does not change.
+
 ## 0.1.0 — 2026-08-26
 
 First release. Extracted from the reference host, where the four primitives had grown apart:

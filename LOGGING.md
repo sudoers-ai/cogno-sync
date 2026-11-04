@@ -23,6 +23,8 @@ This library follows the Cogno house rule: **libraries emit, the host configures
 | `cogno_sync.locks` | `event=lock_error` | Redis unreachable — the body ran WITHOUT the lock |
 | | `event=lock_timeout` | not acquired within `max_wait` — the body ran anyway |
 | | `event=lock_release_failed` | the lock will be freed by its TTL instead |
+| | `event=lock_renew_failed` | one heartbeat could not reach Redis — the next beat tries again; the body is not affected |
+| | `event=lock_lost` | the key holds another owner's token (our TTL lapsed): the heartbeat stops and never renews it |
 | `cogno_sync.ratelimit` | `event=ratelimit_error` | the limiter is not limiting right now |
 | `cogno_sync.idempotency` | `event=claim_store_unavailable` | duplicates are not being caught right now |
 | | `event=claim_release_failed` | a claim will expire by TTL rather than be released |
